@@ -1,3 +1,43 @@
+////////////////////////////////////////////////////////////Interview
+//Trigger are stored program, which are AUTOMATICALLY excuted or fired when some events(insert, delete and update) occur.
+
+//Types of Triggers in SQL Server
+->DML : DML Triggers AFTER Triggers After INSERT/UPDATE/DELETE operations.
+//Example
+Executes after the operation (INSERT, UPDATE, DELETE).
+CREATE TRIGGER trg_AfterInsert
+ON Employees
+AFTER INSERT
+AS
+BEGIN
+   PRINT 'A row was inserted in Employees table.'
+END
+
+->DDL  : DDL Triggers ON DATABASE / ON ALL SERVER On schema changes like CREATE, ALTER.
+Example: 
+
+CREATE TRIGGER trg_DDL_Log
+ON DATABASE
+FOR CREATE_TABLE, DROP_TABLE
+AS
+BEGIN
+   PRINT 'DDL Change detected on the database!'
+END
+
+->LogOn : Logon Triggers AFTER LOGON Fires when a user logs in to SQL Server.
+CREATE TRIGGER trg_LogonCheck
+ON ALL SERVER
+FOR LOGON
+AS
+BEGIN
+   PRINT 'A user just logged in.'
+END.
+
+
+
+
+
+
 //////////////////////////////////////////////////////////////////////////
  What is a Trigger in SQL Server?
 
