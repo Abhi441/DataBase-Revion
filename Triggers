@@ -1,0 +1,168 @@
+//////////////////////////////////////////////////////////////////////////
+ What is a Trigger in SQL Server?
+
+A Trigger is a special kind of stored procedure that automatically runs (fires) when an event occurs in a table or view.
+
+> 🔁 Think of it like a "reaction" — when something happens in your database (like inserting, updating, or deleting a row), the trigger will automatically execute code in response.
+
+---
+
+✅ Why Do We Use Triggers?
+
+To enforce business rules automatically
+
+To log changes or maintain audit trails
+
+To prevent invalid data from being inserted
+
+To enforce relationships or complex constraints
+
+To automatically update other tables
+
+---
+
+📚 Types of Triggers in SQL Server
+
+Category Trigger Type When it Fires
+
+🔁 DML Triggers AFTER Triggers After INSERT/UPDATE/DELETE operations
+ INSTEAD OF Triggers Replaces INSERT/UPDATE/DELETE operation
+⏱️ DDL Triggers ON DATABASE / ON ALL SERVER On schema changes like CREATE, ALTER
+💣 Logon Triggers AFTER LOGON Fires when a user logs in to SQL Server
+
+---
+
+🔁 1. DML Triggers (Data Manipulation Language)
+
+These are most commonly used.
+
+✅ a) AFTER Trigger
+
+Executes after the operation (INSERT, UPDATE, DELETE).
+
+
+CREATE TRIGGER trg_AfterInsert
+ON Employees
+AFTER INSERT
+AS
+BEGIN
+   PRINT 'A row was inserted in Employees table.'
+END
+
+✅ b) INSTEAD OF Trigger
+
+Executes instead of the operation — can be used on views too.
+
+
+CREATE TRIGGER trg_InsteadOfDelete
+ON Employees
+INSTEAD OF DELETE
+AS
+BEGIN
+   PRINT 'Delete operation blocked on Employees table.'
+END
+
+
+---
+
+⏱️ 2. DDL Triggers (Data Definition Language)
+
+Fires when you run commands like CREATE, DROP, or ALTER.
+
+CREATE TRIGGER trg_DDL_Log
+ON DATABASE
+FOR CREATE_TABLE, DROP_TABLE
+AS
+BEGIN
+   PRINT 'DDL Change detected on the database!'
+END
+
+
+---
+
+💣 3. Logon Triggers
+
+Used to control or monitor SQL Server logins.
+
+CREATE TRIGGER trg_LogonCheck
+ON ALL SERVER
+FOR LOGON
+AS
+BEGIN
+   PRINT 'A user just logged in.'
+END
+
+
+---
+
+🔍 Trigger Concepts to Understand Deeply
+
+Concept Explanation
+
+INSERTED table Contains new rows being inserted or updated
+DELETED table Contains old rows being deleted or updated
+Can't call triggers manually Triggers are automatic, not manually executable
+Triggers are transactional If a trigger fails, the whole operation rolls back
+
+
+
+---
+
+🔄 Example: Trigger with INSERTED and DELETED Tables
+
+CREATE TRIGGER trg_AuditSalaryChange
+ON Employees
+AFTER UPDATE
+AS
+BEGIN
+   INSERT INTO AuditTable(EmpID, OldSalary, NewSalary)
+   SELECT D.EmpID, D.Salary, I.Salary
+   FROM INSERTED I
+   JOIN DELETED D ON I.EmpID = D.EmpID
+END
+
+> This records salary changes for auditing purposes.
+
+
+
+
+---
+
+⚠️ Things to Keep in Mind
+
+Don't put complex logic inside triggers — can slow performance
+
+Avoid nesting multiple triggers unless needed
+
+Make sure to handle recursion and infinite loops
+
+Use TRY-CATCH inside trigger to handle errors
+
+Test thoroughly before deploying in production
+
+
+
+---
+
+🧠 Interview Prep Summary
+
+Question Sample Answer
+
+What is a trigger? A trigger is a special stored procedure that runs automatically in response to INSERT, UPDATE, DELETE, or schema events.
+Types of triggers? DML (AFTER, INSTEAD OF), DDL, and Logon triggers
+Where are triggers stored? In the database, linked to tables or server-level events
+Real-life use case? Automatically log data changes for auditing, prevent deletion of important records, etc.
+
+
+
+---
+
+🧾 Real-Life Usage Ideas
+
+Logging user changes in audit table
+
+Prevent deletion of master records
+
+Automatic updates in child tables (cascade)
+
+Restrict schema changes
