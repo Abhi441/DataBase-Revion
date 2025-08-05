@@ -4,7 +4,8 @@ View : view is Virtual table which contains of a subset of data contains in a ta
 -->View are not stored in memory like table then why to use views :
 1> Views can be easily Indexed to improve the performance.
 2>Extra security - DBA can hide the actual table names and expose views for read only operation 
-
+3> User don't need to know where data comes from.
+4>Don't repeat the same JOINS or filters in 10 places.
 --> Remember, in a view query is stored but the data is never stored like a table.
 
 
