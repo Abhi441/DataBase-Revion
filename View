@@ -1,0 +1,143 @@
+/////////////////////////////////////////////////////////////////Interview
+View : view is Virtual table which contains of a subset of data contains in a table of more than one table.
+
+-->View are not stored in memory like table then why to use views :
+1> Views can be easily Indexed to improve the performance.
+2>Extra security - DBA can hide the actual table names and expose views for read only operation 
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////Notes
+What is a View in SQL Server?
+A View is a virtual table that is based on a SELECT query.
+
+🔍 It looks like a table, behaves like a table, but does not store data by itself — instead, it shows data from one or more real tables.
+
+✅ Why Use a View?
+Benefit	Explanation
+Simplifies complex queries	Hide the complexity of joins and filters
+Security	Show only selected columns to users
+Reusability	Write once, use multiple times
+Abstraction	Separate user layer from physical DB structure
+Logical Separation	Divide data logically (e.g., active customers view)
+🛠️ Syntax: Creating a View
+CREATE VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+🔁 Example
+CREATE VIEW vw_ActiveEmployees AS
+SELECT EmpID, FullName, Department
+FROM Employees
+WHERE Status = 'Active';
+You can now query this view like a table:
+
+SELECT * FROM vw_ActiveEmployees;
+📚 Types of Views in SQL Server
+Type	Description
+🔹 Simple View	Based on one table, no aggregation
+🔹 Complex View	Based on multiple tables, joins, aggregations
+🔒 Indexed View	A view with a physical index (materialized view)
+🔄 System View	Predefined views provided by SQL Server for metadata (like sys.tables, INFORMATION_SCHEMA)
+🔍 View vs Table
+Table	View
+Stores data	Doesn’t store data
+Physical object	Virtual object
+Can be updated easily	Updates allowed only in certain conditions
+Independent	Depends on base tables
+✅ Updating a View
+You can update a view only if:
+
+It’s based on one table
+It does not use:
+Aggregates (SUM, COUNT, etc.)
+GROUP BY, DISTINCT, UNION
+JOINs
+Subqueries
+❌ Not allowed:
+CREATE VIEW vw_TotalSales AS
+SELECT CustomerID, SUM(Amount)
+FROM Orders
+GROUP BY CustomerID;
+You can't update this view directly.
+
+✏️ Modify or Delete View
+-- Modify
+ALTER VIEW view_name AS
+SELECT ...
+
+-- Delete
+DROP VIEW view_name;
+🔐 Views for Security
+Imagine you have an Employees table with sensitive salary data.
+
+Instead of giving access to the whole table:
+
+CREATE VIEW vw_PublicEmployees AS
+SELECT EmpID, Name, Department FROM Employees;
+Now, junior employees can use this view and won’t see the salary.
+
+⚙️ Indexed View (Materialized View)
+A normal view does not store data.
+But an Indexed View does store data physically and improves performance.
+
+🧱 Syntax:
+CREATE VIEW vw_ProductSummary
+WITH SCHEMABINDING
+AS
+SELECT ProductID, COUNT_BIG(*) AS TotalOrders
+FROM dbo.Orders
+GROUP BY ProductID;
+GO
+
+CREATE UNIQUE CLUSTERED INDEX idx_ProductSummary
+ON vw_ProductSummary (ProductID);
+✅ WITH SCHEMABINDING is mandatory
+✅ Useful when you have frequent reads on expensive queries
+
+🔄 Real-Life Use Cases
+Use Case	View Example
+🔐 Hide sensitive data	Mask salary column
+🔄 Reuse join logic	Create join between Customers and Orders
+📈 Show reports	Create monthly_sales view
+🧪 Testing/staging	Create filtered sample data views
+📊 Dashboards	Feed views into BI tools like Power BI
+🧠 Interview-Ready Summary
+Q	A
+What is a view?	A virtual table based on a SELECT query
+Does it store data?	No (except Indexed View)
+Can you update a view?	Yes, if it’s a simple view (one table, no joins)
+Can you join in a view?	Yes, but that makes it a complex view
+Can you filter data using a view?	Yes, use WHERE inside the view
+💡 Pro Tip
+You can nest views — a view based on another view.
+
+CREATE VIEW vw_SalesReport AS
+SELECT * FROM vw_TopCustomers WHERE TotalAmount > 100000;
+📎 Final Quick Commands
+-- Create a simple view
+CREATE VIEW vw_CustomersIndia AS
+SELECT * FROM Customers WHERE Country = 'India';
+
+-- View data
+SELECT * FROM vw_CustomersIndia;
+
+-- Alter view
+ALTER VIEW vw_CustomersIndia AS
+SELECT Name, City FROM Customers WHERE Country = 'India';
+
+-- Drop view
+DROP VIEW vw_CustomersIndia;
+
+-- List all views
+SELECT * FROM sys.views;
+
+-- View definition
+sp_helptext 'vw_CustomersIndia';
