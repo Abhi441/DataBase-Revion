@@ -5,9 +5,16 @@ View : view is Virtual table which contains of a subset of data contains in a ta
 1> Views can be easily Indexed to improve the performance.
 2>Extra security - DBA can hide the actual table names and expose views for read only operation 
 
+--> Remember, in a view query is stored but the data is never stored like a table.
 
 
+Example :
+CREATE VIEW vw_ActiveEmployees AS
+SELECT EmpID , FullName ,Department
+from Employees
+WHERE Status = 'Active';
 
+Select * From vw_ActiveEmployees;
 
 
 
