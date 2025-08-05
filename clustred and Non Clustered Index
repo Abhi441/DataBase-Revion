@@ -1,0 +1,112 @@
+ What is a Clustered Index?
+
+> A clustered index sorts and stores the rows of a table physically in the order of the index key.
+
+
+
+Think of it like:
+
+🗂️ A dictionary or phonebook:
+
+Everything is physically arranged in sorted order
+
+You don’t search randomly — it’s already ordered by Name (the index)
+
+
+In SQL terms:
+
+If a table has a clustered index on EmployeeID, the actual data in the table is sorted by EmployeeID
+
+
+
+---
+
+🧠 Key Points (in plain English)
+
+Feature Explanation
+
+✅ Physical order Clustered index rearranges the actual rows in the table
+✅ Only one allowed Each table can have only one clustered index because you can’t sort a table in multiple ways physically
+✅ Automatically created When you create a primary key, SQL Server usually automatically creates a clustered index
+✅ Fast performance Searching, sorting, range queries, and joins are faster on indexed columns
+📦 Actual data = index The clustered index is the table. There is no separate structure like in non-clustered index
+
+
+
+---
+
+🧪 Real-life Analogy:
+
+📚 Imagine a library where books are physically arranged by Book ID:
+
+If you're looking for Book ID 104, the librarian quickly goes to the exact shelf → fast!
+
+You can't have one shelf arranged by Book ID and another by Book Title — because the physical layout can only follow one sorting rule
+
+
+That’s why a table can only have one clustered index.
+
+
+---
+
+📌 Syntax to Create a Clustered Index
+
+CREATE CLUSTERED INDEX IX_Employee_EmpID
+ON Employee(EmpID);
+
+Or, when you create a primary key:
+
+CREATE TABLE Employee (
+    EmpID INT PRIMARY KEY, -- Clustered index automatically created
+    Name VARCHAR(100),
+    Salary INT
+);
+
+
+---
+
+✅ When to Use Clustered Index
+
+On primary key or any frequently searched column
+
+On columns used in sorting or range queries (BETWEEN, <, >)
+
+On columns with unique or nearly unique values
+
+
+
+---
+
+❌ When Not to Use It
+
+On columns with frequent updates (e.g., timestamps)
+
+On columns with lots of duplicates (like Gender)
+
+If the data is inserted randomly and might cause fragmentation
+
+
+
+---
+
+🆚 Clustered vs Non-Clustered Index
+
+Feature Clustered Index Non-Clustered Index
+
+Data order Physically sorted Separate structure
+Number per table Only one Many allowed
+Storage Data is the index Stores only a pointer to actual row
+Faster for Sorting, searching ranges Lookup of specific columns
+Use case Primary key or natural order columns Frequently filtered but not primary key
+
+
+
+---
+
+🧠 Interview Tip:
+
+Q: Can a table have multiple clustered indexes?
+A: ❌ No. Only one, because the table can only be sorted one way physically.
+
+Q: What happens if I insert a new row in a clustered index table?
+A: SQL Server places it in the correct sorted position automatically. (May cause fragmentation if not managed.)
