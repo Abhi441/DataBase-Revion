@@ -1,6 +1,27 @@
 ////////////////////////////////////////////////////////////Interview
 //Trigger are stored program, which are AUTOMATICALLY excuted or fired when some events(insert, delete and update) occur.
 
+Example :
+
+CREATE TABLE EmployeeLog (
+    LogID INT IDENTITY PRIMARY KEY, -- Auto-incrementing ID (like serial number)
+    EmployeeID INT, -- Which employee action happened
+    Action NVARCHAR(50), -- What action happened (Insert, Update, Delete)
+    ActionDate DATETIME DEFAULT GETDATE() -- When action happened (default = now)
+);
+
+CREATE TRIGGER trgAfterInsert_Employee
+ON Employees
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO EmployeeLog (EmployeeID, Action)
+    SELECT Id, 'INSERT'
+    FROM inserted; -- "inserted" is a special table with new rows
+END;
+
+
+
 //Types of Triggers in SQL Server
 ->DML : DML Triggers AFTER Triggers After INSERT/UPDATE/DELETE operations.
 //Example
